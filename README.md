@@ -7,7 +7,8 @@ There are multiple scripts herein:
 - Prep Script
 - Run Script
 - Post-run Processing Script
-    - Most analysis and graphics (
-    - Map (Figure 1; )
-    - Figure 7 ( )
+
 - Analysis and Graphics Scripts
+    - Most analysis and graphics (output_analysis_and_most_graphics_20250722.R)
+    - Map (Figure 1; study_map_Figure1_20250722.R)
+    - Figure 7 ( )
