@@ -11,8 +11,11 @@ library(tidyverse)
 # setwd("")
 
 #load data prepped environment
-load("./leesextended_2023_dataprepped_20250430_mv57.RData")
-
+load("./leesextended_2023_dataprepped_20250430_mv57.RData") #VFTS-PT
+#load("./leesextended_2023_dataprepped_20250505_mv59.RData") #VFTS-CQ
+#load("./leesextended_2023_dataprepped_20250505_mv59.RData") #VFTS-MT
+#load("./leesextended_2023_dataprepped_20250506_mv60b.RData") #VFTS-MT, low uniform tt
+#load("./leesextended_2023_dataprepped_20250506_mv60c.RData") #VFTS-MT, hi uniform tt
 
 ###############
 ###---STAN--###
@@ -45,4 +48,7 @@ ms_prior <- stan("./VFTS_20250716.stan",
 
 #save workspace image
 save.image(paste0("./VFTS-PT_modeloutput_", format(Sys.Date(), "%Y%m%d"), ".RData"))
-
+#save.image(paste0("./VFTS-CQ_modeloutput_", format(Sys.Date(), "%Y%m%d"), ".RData"))
+#save.image(paste0("./VFTS-MT_modeloutput_", format(Sys.Date(), "%Y%m%d"), ".RData"))
+#save.image(paste0("./VFTS-MTlow_modeloutput_", format(Sys.Date(), "%Y%m%d"), ".RData"))
+#save.image(paste0("./VFTS-MThi_modeloutput_", format(Sys.Date(), "%Y%m%d"), ".RData"))
