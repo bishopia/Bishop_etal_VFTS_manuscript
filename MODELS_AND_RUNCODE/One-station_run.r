@@ -9,14 +9,20 @@ suppressPackageStartupMessages({
   library(foreach)
 })
 
-#load model inputs prepped for VFTS-PT run
-load("./leesextended_2023_dataprepped_20250430_mv57.RData")
+#load table from data release
+DR_inputs <- read_csv("2_VFTS_and_One-station_model_input.csv")
 
-#fix light column
-dat <- one_station_input %>%
-  rename(solar.time=datetime) %>%
+#isolate one-station inputs, rename a bit
+dat <- DR_inputs %>% 
+  filter(model_run=="OS") %>%
   filter(solar.time < ymd("2014-03-01")) %>%
-  arrange(solar.time)
+  select(solar.time=datetime,
+         DO.obs=downstream_DO,
+         DO.sat=downstream_DO_sat,
+         depth=reach_depth,
+         temp.water=downstream_temp,
+         light) %>%
+  mutate(date=ymd(as.character(date(solar.time))))
 
 #specify model
 specs_daytime <- specs(
