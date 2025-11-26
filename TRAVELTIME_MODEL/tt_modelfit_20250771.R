@@ -78,7 +78,7 @@ cat("R-squared:", r_squared, "\n",
 coef(lm4)
 
 
-#fit estiamtes to be used for estimating travel time in DO time series
+#fit estimates to be used for estimating travel time in DO time series
 ttq_intercept <- 4.73797225
 ttq_logq <- -0.49289591
 ttq_movingslope <- -0.01908137
@@ -96,6 +96,7 @@ p1 <- ggplot(traveltimes, aes(x = q, y = tt)) +
         legend.key = element_rect(fill = "white", color = "black"),
         legend.background = element_rect(fill = "white", color = "black", size = 0.5))
 
+#tmp up of oxygen data to produce manuscript Figure 2
 tmp1 <- read_csv("../../provided_data/twostation_oxy_cleaned/Compiled_Bolt_20240606_cleanIWB_tentative.csv") %>%
   rename(datetime=`Date Time`) %>%
   mutate(date=date(datetime)) %>% 
@@ -125,31 +126,6 @@ p <-  p2 + p1
 ggsave("./FIGURE2_tt~q.png", p, width=1.5*6.5, height=1.5*3.25, units="in")
  
 
-
-
-
-
-
-
-
-
-
-
-# 
-# p1 <- ggplot(traveltimes, aes(x = log(q), y = log(tt))) +
-#   geom_point(color = "grey50") +  # Actual data points
-#   geom_line(data = prediction_data, aes(x = log(q), y = log(predicted_tt)), color = 1, size = 1) +
-#   labs(x = "discharge (cms)", y = "travel time (hours)") +
-#   theme_bw(base_size = 16) +
-#   scale_x_continuous(breaks=seq(100,700,100)) +
-#   annotate("text",  x=600, y = 15, label = paste0("Intercept=", signif(ttq_intercept, 2)), size=5, hjust = 0) +
-#   annotate("text",  x=600, y = 14.25, label = paste0("slope=", signif(ttq_logq, 2)), size=5, hjust = 0) +
-#   annotate("text",  x=600, y = 13.5, label = paste0("R2=", signif(r_squared, 2)), size=5, hjust = 0)
-# ggsave("./FIGURE2_tt~q.png", p1, width=6.5, height=4.5, units="in")
-# 
-# 
-# 
-
 # Generate the fitted travel time line data
 line_data <- traveltimes %>% 
   mutate(predicted_tt = exp(ttq_intercept + (ttq_logq * log(q) + ttq_movingslope * moving_slope)))
@@ -163,201 +139,3 @@ traveltimes %>%
   xlab("Discharge (cfs)") + 
   ylab("Travel time (hours)")
   
-  
-
-
-
-
-
-lm_quad <- lm(log(tt) ~ log(q) + I(log(q)^2) + moving_slope, 
-              data = traveltimes)
-# Get mean slope
-mean_moving_slope <- mean(traveltimes$moving_slope, na.rm = TRUE)
-
-# Build a sequence of q from min to max
-prediction_data <- data.frame(
-  q = seq(
-    min(traveltimes$q, na.rm = TRUE), 
-    max(traveltimes$q, na.rm = TRUE), 
-    length.out = 100
-  ),
-  moving_slope = rep(mean_moving_slope, 100)
-)
-prediction_data$predicted_log_tt <- predict(lm_quad, newdata = prediction_data)
-prediction_data$predicted_tt <- exp(prediction_data$predicted_log_tt)
-
-ggplot(traveltimes, aes(x = q, y = tt)) +
-  geom_point(color = "black", alpha = 0.7) +  # scatter of actual data
-  geom_line(
-    data = prediction_data,
-    aes(x = q, y = predicted_tt),
-    color = "darkred", size = 1
-  ) +
-  labs(
-    title = "Quadratic Model with Mean Moving Slope",
-    x = "q",
-    y = "Travel Time (tt)"
-  ) +
-  theme_minimal()
-
-lm_quad_ortho <- lm(log(tt) ~ poly(log(q), 2) + moving_slope, data = traveltimes)
-prediction_data$predicted_log_tt <- predict(lm_quad_ortho, newdata = prediction_data)
-prediction_data$predicted_tt <- exp(prediction_data$predicted_log_tt)
-
-ggplot(traveltimes, aes(x = q, y = tt)) +
-  geom_point(color = "black", alpha = 0.7) +  # scatter of actual data
-  geom_line(
-    data = prediction_data,
-    aes(x = q, y = predicted_tt),
-    color = "darkred", size = 1
-  ) +
-  labs(
-    title = "Quadratic Model with Mean Moving Slope",
-    x = "q",
-    y = "Travel Time (tt)"
-  ) +
-  theme_minimal()
-
-
-lm_cubic <- lm(log(tt) ~ poly(log(q), 3) + moving_slope, data = traveltimes)
-# Get mean slope
-mean_moving_slope <- mean(traveltimes$moving_slope, na.rm = TRUE)
-
-# Build a sequence of q from min to max
-prediction_data <- data.frame(
-  q = seq(
-    min(traveltimes$q, na.rm = TRUE), 
-    max(traveltimes$q, na.rm = TRUE), 
-    length.out = 100
-  ),
-  moving_slope = rep(mean_moving_slope, 100)
-)
-prediction_data$predicted_log_tt <- predict(lm_cubic, newdata = prediction_data)
-prediction_data$predicted_tt <- exp(prediction_data$predicted_log_tt)
-
-ggplot(traveltimes, aes(x = q, y = tt)) +
-  geom_point(color = "black", alpha = 0.7) +  # scatter of actual data
-  geom_line(
-    data = prediction_data,
-    aes(x = q, y = predicted_tt),
-    color = "darkred", size = 1
-  ) +
-  labs(
-    x = "Q",
-    y = "tt"
-  ) +
-  theme_minimal()
-
-
-
-library(splines)
-lm_spline <- lm(log(tt) ~ ns(log(q), df=4) + moving_slope, data = traveltimes)
-
-# Get mean slope
-mean_moving_slope <- mean(traveltimes$moving_slope, na.rm = TRUE)
-
-# Build a sequence of q from min to max
-prediction_data <- data.frame(
-  q = seq(
-    min(traveltimes$q, na.rm = TRUE), 
-    max(traveltimes$q, na.rm = TRUE), 
-    length.out = 100
-  ),
-  moving_slope = rep(mean_moving_slope, 100)
-)
-prediction_data$predicted_log_tt <- predict(lm_spline, newdata = prediction_data)
-prediction_data$predicted_tt <- exp(prediction_data$predicted_log_tt)
-
-ggplot(traveltimes, aes(x = q, y = tt)) +
-  geom_point(color = "black", alpha = 0.7) +  # scatter of actual data
-  geom_line(
-    data = prediction_data,
-    aes(x = q, y = predicted_tt),
-    color = "darkred", size = 1
-  ) +
-  labs(
-    title = "Spline Model with Mean Moving Slope",
-    x = "q",
-    y = "Travel Time (tt)"
-  ) +
-  theme_minimal()
-
-coef(lm_cubic)
-
-
-AIC(lm4)
-AIC(lm_cubic)
-AIC(lm_spline)
-aic <- AIC(lm4)
-aic <- AIC(lm4)
-
-
-discharge <- read_csv("./discharge_20080301-20231231.csv") %>% select(datetime, q, moving_slope)
-
-payn <- read_csv("../../provided_data/payn_model_output/summary_travel_times.csv") %>% 
-  rename(datetime=time_MST, tt=traveltime) %>%
-  left_join(discharge, by="datetime") %>% 
-  drop_na()
-  
-  
-lm_cubic <- lm(log(tt) ~ poly(log(q), 3), data = payn)
-  # Get mean slope
-mean_moving_slope <- mean(payn$moving_slope, na.rm = TRUE)
-  
-  # Build a sequence of q from min to max
-  prediction_data <- data.frame(
-    q = seq(
-      min(payn$q, na.rm = TRUE), 
-      max(payn$q, na.rm = TRUE), 
-      length.out = 100
-    ),
-    moving_slope = rep(mean_moving_slope, 100)
-  )
-  prediction_data$predicted_log_tt <- predict(lm_cubic, newdata = prediction_data)
-  prediction_data$predicted_tt <- exp(prediction_data$predicted_log_tt)
-  
-ggplot(payn, aes(x = q, y = tt)) +
-  # geom_point()
-  geom_point(color = "black", alpha = 0.7) +  # scatter of actual data
-  geom_line(
-    data = prediction_data,
-    aes(x = q, y = predicted_tt),
-    color = "darkred", size = 1
-  ) +
-  labs(
-    x = "q",
-    y = "Travel Time (tt)"
-  ) +
-  theme_minimal()
-
-
-lm4 <- lm(log(tt)~log(q)+moving_slope, data = payn)
-# Get mean slope
-mean_moving_slope <- mean(payn$moving_slope, na.rm = TRUE)
-
-# Build a sequence of q from min to max
-prediction_data <- data.frame(
-  q = seq(
-    min(payn$q, na.rm = TRUE), 
-    max(payn$q, na.rm = TRUE), 
-    length.out = 100
-  ),
-  moving_slope = rep(mean_moving_slope, 100)
-)
-prediction_data$predicted_log_tt <- predict(lm4, newdata = prediction_data)
-prediction_data$predicted_tt <- exp(prediction_data$predicted_log_tt)
-
-ggplot(payn, aes(x = q, y = tt)) +
-  # geom_point()
-  geom_point(color = "black", alpha = 0.7) +  # scatter of actual data
-  geom_line(
-    data = prediction_data,
-    aes(x = q, y = predicted_tt),
-    color = "darkred", size = 1
-  ) +
-  labs(
-    x = "q",
-    y = "tt"
-  ) +
-  theme_minimal()
-
