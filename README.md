@@ -9,7 +9,7 @@ Script:
 ## 02_MODELS_AND_RUNCODES
 Includes:
 - stan model
-- prep and run code for one-station model run
+- prep code (.r) and run code (.sh) for one-station model run
 - prep and model code for VFTS model runs
 
 ## 03_MODEL_OUTPUT_PROCESSING
