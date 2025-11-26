@@ -11,9 +11,11 @@ Includes:
 - stan model
 - prep and run code for one-station model run
 - prep and model code for VFTS model runs
-  
-## 03_GRAPHICS_AND_ANALYSES
-Includes:
 
-## 04_MODEL_OUTPUT_PROCESSING
-Includes
+## 03_MODEL_OUTPUT_PROCESSING
+Includes 1 file per main model run which processes stan model output into outputs found in the Data Release Model outputs spreadsheet
+
+## 04_GRAPHICS_AND_ANALYSES
+Includes scripts to take processed outputs and produce analyses and graphics used in and for manuscript.
+
+
