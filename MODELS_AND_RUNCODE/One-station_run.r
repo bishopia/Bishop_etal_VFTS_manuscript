@@ -9,8 +9,6 @@ suppressPackageStartupMessages({
   library(foreach)
 })
 
-#output_name <- "mv51_payndates.lf"
-
 #load model inputs prepped for VFTS-PT run
 load("./leesextended_2023_dataprepped_20250430_mv57.RData")
 
