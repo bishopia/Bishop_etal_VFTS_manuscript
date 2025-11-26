@@ -16,7 +16,7 @@ library(broom)
 ###########################################################
 
 #load up travel times
-traveltimes <- read_csv("./traveltimes_20240410.csv")
+traveltimes <- read_csv("./traveltimes_DataReleaseTable.csv")
 
 #unit change
 traveltimes <- traveltimes %>% mutate(q=q*0.0283168, moving_slope=moving_slope*0.0283168)
@@ -97,12 +97,12 @@ p1 <- ggplot(traveltimes, aes(x = q, y = tt)) +
         legend.background = element_rect(fill = "white", color = "black", size = 0.5))
 
 #tmp up of oxygen data to produce manuscript Figure 2
-tmp1 <- read_csv("../../provided_data/twostation_oxy_cleaned/Compiled_Bolt_20240606_cleanIWB_tentative.csv") %>%
+tmp1 <- read_csv("upstream_DO_data_DataReleaseTable.csv") %>%
   rename(datetime=`Date Time`) %>%
   mutate(date=date(datetime)) %>% 
   filter(date %in% c(ymd("2012-08-02"), ymd("2012-08-03")))  %>%
   select(datetime, boltSP=SpCond)
-tmp2 <- read_csv("../../provided_data/twostation_oxy_cleaned/Compiled_Buoy_20240606_cleanIWB_tentative.csv") %>%
+tmp2 <- read_csv("downstream_DO_data_DataReleaseTable.csv") %>%
   rename(datetime=`Date Time`) %>%
   mutate(date=date(datetime)) %>% 
   filter(date %in% c(ymd("2012-08-02"), ymd("2012-08-03")))  %>%
@@ -139,3 +139,4 @@ traveltimes %>%
   xlab("Discharge (cfs)") + 
   ylab("Travel time (hours)")
   
+
