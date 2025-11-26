@@ -1,1 +1,0 @@
-the files in this subdirectory were edited from the relevant mv folders to show the general production of inputs, which i ran for each model run, each requiring slight tweaks to adjust for streamMetabolizer input requirements (e.g. names of variables) or to adjust travel times for specific tests. I will provide here the input prep i used for VFTS-CQ
