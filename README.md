@@ -1,2 +1,8 @@
 # Bishop_etal_VFTS_manuscript
 Code associated with the VFTS draft manuscript
+
+## 01_TRAVELTIME_MODEL
+## 02_MODEL_INPUTS
+## 03_MODELS_AND_RUNCODE
+## 04_GRAPHICS_AND_ANALYSES
+## 05_MODEL_OUTPUT_PROCESSING
